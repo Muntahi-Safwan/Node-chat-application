@@ -1,4 +1,4 @@
-// External imports
+// external imports
 const express = require("express");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
@@ -8,47 +8,46 @@ const loginRouter = require("./router/loginRouter");
 const usersRouter = require("./router/usersRouter");
 const inboxRouter = require("./router/inboxRouter");
 
-// Internal Importes
+// internal imports
 const {
   notFoundHandler,
   errorHandler,
 } = require("./middlewares/common/errorHandler");
 
 const app = express();
-
 dotenv.config();
 
-// Database connection
+// database connection
 mongoose
   .connect(process.env.MONGO_CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("database connection successful"))
+  .then(() => console.log("database connection successful!"))
   .catch((err) => console.log(err));
 
-// Request Parser
+// request parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Set View Engine
+// set view engine
 app.set("view engine", "ejs");
 
-// Set Static Folders
+// set static folder
 app.use(express.static(path.join(__dirname, "public")));
 
-// Parse Cookies
+// parse cookies
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
-//routing setup
+// routing setup
 app.use("/", loginRouter);
 app.use("/users", usersRouter);
 app.use("/inbox", inboxRouter);
 
-// 404 Not Found handler
+// 404 not found handler
 app.use(notFoundHandler);
 
-// Common error handler
+// common error handler
 app.use(errorHandler);
 
 app.listen(process.env.PORT, () => {
